@@ -1,0 +1,41 @@
+import time
+from threading import Thread
+from pynput.mouse import Button, Controller
+import keyboard
+
+# Create a mouse controller
+mouse = Controller()
+
+# Variable to control the clicking loop
+clicking = False
+
+# Function to perform fast clicking
+def click_mouse():
+    while True:
+        if clicking:
+            mouse.click(Button.left, 1)
+            time.sleep(0.0001)  # Sleep for 0.1ms (100 microseconds) for extremely fast clicking
+        else:
+            time.sleep(0.1)
+
+# Function to toggle clicking on/off
+def toggle_clicking():
+    global clicking
+    clicking = not clicking
+    print(f"Clicking {'started' if clicking else 'stopped'}")
+
+# Start the clicking thread
+click_thread = Thread(target=click_mouse)
+click_thread.daemon = True 
+click_thread.start()
+
+# Bind the F6 key to toggle clicking
+keyboard.add_hotkey('f6', toggle_clicking)
+
+print("Press F6 to start/stop clicking.")
+print("Press F8 to exit.")  # Updated to F8
+
+# Wait for the F8 key to exit
+keyboard.wait('f8')  # Updated to F8
+
+print("Exiting...")
